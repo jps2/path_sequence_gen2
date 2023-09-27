@@ -2,8 +2,8 @@
   "name": "Sunburst chart for lookerstudio",
   "logoUrl": "http://url",
   "organization": "Jyri Sihvo, reaktor.com",
-  "supportUrl": "https://github.com/jps2/gds-sequences-viz",
-  "packageUrl": "https://github.com/jps2/gds-sequences-viz",
+  "supportUrl": "https://github.com/jps2/path_sequence_gen2",
+  "packageUrl": "https://github.com/jps2/path_sequence_gen2",
   "description": "Sunburst chart for paths",
   "devMode": true,
   "components": [
