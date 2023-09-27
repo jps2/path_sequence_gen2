@@ -131,22 +131,8 @@ function drawViz(data) {
   var div_data = [
     { "id": "left_sidebar", "height": (height + margin.top + margin.bottom), "width": (sidebar_width-1) },
     { "id": "chart", "height": (height + margin.top + margin.bottom), "width": (rect_base+margin.left+margin.right) }
-    //{ "id": "chart_row", "height": (height + margin.top + margin.bottom), "width": (rect_base+margin.left+margin.right) }
   ]
 
- // var divchart_data = [
-   // { "id": "chart", "height": (height + margin.top + margin.bottom), "width": (rect_base+margin.left+margin.right) }
-    //{ "id": "legend", "height": (height + margin.top + margin.bottom), "width": (li.w + margin.right-sidebar_width) }
-  //]
-
-  /*
-  var grid = d3.select("body")
-    .selectAll('div')
-    .data(main_dat).enter()
-    .append('div')
-    .attr('id', function (d) { return d.id })
-    //.attr('style', function (d) { return 'height: ' + d.height + 'px; width: ' + d.width + 'px;' })
-*/
   var main_grid = d3.select('body') 
     .selectAll('div') 
     .data(div_data).enter()
@@ -154,14 +140,8 @@ function drawViz(data) {
     .attr('id', function (d) { return d.id })
     .attr('style', function (d) { return 'height: ' + d.height + 'px; width: ' + d.width + 'px;' })
 
-    /*
-  var grid_chart = d3.select("body")
-    .selectAll('div')
-    .data(divchart_data).enter()
-    .append('div')
-    .attr('id', function (d) { return d.id })
-    .attr('style', function (d) { return 'height: ' + d.height + 'px; width: ' + d.width + 'px;' })
-*/
+
+
   createVisualization(seq_hierarchy);
 }
 
