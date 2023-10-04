@@ -294,7 +294,8 @@ function createVisualization(json) {
 
     var e_size = '';
     if (showSecondary && Array.isArray(d.data.children)) {
-      e_size =  percFormat(getEndsize(d.data)/d.value) + " " + sequence_percentage;
+      // dont show 100% labels = last node before end
+      e_size =  getEndsize(d.data) === d.value ? " " : percFormat(getEndsize(d.data)/d.value) + " " + sequence_percentage;
     }
 
   
