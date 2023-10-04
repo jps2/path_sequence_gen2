@@ -41,7 +41,7 @@
           "id": "base_font_size",
           "label": "Font size",
           "type": "FONT_SIZE",
-          "defaultValue": "12"
+          "defaultValue": 12
         },
         {
           "id": "base_font_color",
@@ -59,7 +59,7 @@
           "id": "bc_font_size",
           "label": "Breadcrumb label  font size",
           "type": "FONT_SIZE",
-          "defaultValue": "12"
+          "defaultValue": 12
         },
         {
           "id": "bc_font_color",
@@ -70,8 +70,20 @@
           "id": "hide_endpoint",
           "label": "Hide the end point arc",
           "type": "CHECKBOX",
-          "defaultValue": "false"
-        }      
+          "defaultValue": false
+        },
+        {
+          "id": "max_steps_shown",
+          "label": "Max number of steps shown",
+          "type": "TEXTINPUT",
+          "defaultValue": "7"
+        } ,
+        {
+          "id": "perc_ending",
+          "label": "% of paths ending at this step",
+          "type": "TEXTINPUT",
+          "defaultValue": "converted at this step"
+        }        
       ]
     },
     {

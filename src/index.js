@@ -63,7 +63,7 @@ var base_font, base_font_color, base_font_size;
 var bc_font_size, bc_font_color, color_scheme;
 var gds_height, gds_width, rect_base
 var myColor
-var show_legend, hideEndpoint, sequence_levels, sequence_separator
+var show_legend, hideEndpoint, sequence_levels, sequence_percentage
 
 function drawViz(data) {
 
@@ -85,6 +85,8 @@ function drawViz(data) {
   color_scheme = styleByConfigId.color_scheme.value !== undefined ? styleByConfigId.color_scheme.value : 'schemeSet1'
   //show_legend = styleByConfigId.show_legend.value !== undefined ? styleByConfigId.show_legend.value : styleByConfigId.show_legend.defaultValue
   hideEndpoint = styleByConfigId.hide_endpoint.value !== undefined ? styleByConfigId.hide_endpoint.value : styleByConfigId.hide_endpoint.defaultValue
+  sequence_levels = styleByConfigId.max_steps_shown.value !== undefined ? parseInt(styleByConfigId.max_steps_shown.value) : 7
+  sequence_percentage = styleByConfigId.perc_ending.value !== undefined ? styleByConfigId.perc_ending.value : ""
   // setup the number of sequences to be show
 
   // read data
@@ -251,11 +253,15 @@ function createVisualization(json) {
   }
 
   function mouseover(obj, d) {
+    //console.log(obj);
+    //console.log(d.data);
+    //console.log(d.data["children"].length);
     function arraySum(obj) {
       var all_sum = 0;
       if (Array.isArray(obj.children)) {
         for (let i = 0; i < obj.children.length; i++) {
           all_sum += arraySum(obj.children[i])
+          //console.log(obj.children[i]["name"], "," , obj.children[i].size);
         }
       } else if (typeof obj.cvalue === 'number') {
         all_sum += obj.cvalue;
@@ -263,6 +269,33 @@ function createVisualization(json) {
       return all_sum;
     }
 
+    function getEndsize(obj) {
+      var end_size = 0;
+      if (Array.isArray(obj.children)) {
+        for (let i = 0; i < obj.children.length; i++) {
+          //console.log(obj.children[i]["name"], "," , obj.children[i].size);
+          if(obj.children[i]["name"] === "end") {
+            end_size = obj.children[i].size;
+            break;
+          }
+        }
+      //} else if (typeof obj.cvalue === 'number') {
+      //  end_size = obj.cvalue;
+      } else if (!Array.isArray(obj.children) && obj["name"] === "end") {
+        // this is end node
+        //console.log(obj, " type of: ", typeof obj);
+        end_size = obj.size;
+      }
+      return end_size;
+    }
+
+    var e_size = '';
+    if (Array.isArray(d.data.children)) {
+      e_size =  percFormat(getEndsize(d.data)/d.value) + " " + sequence_percentage;
+    }
+
+  
+    //console.log(e_size);
     var percentage = d.value / totalSize;
     var percentageString = percFormat(percentage);
     if (percentage < 0.001) {
@@ -304,7 +337,7 @@ function createVisualization(json) {
 
     var sequenceArray = d.ancestors().reverse();
     sequenceArray.shift(); // remove root node from the array
-    updateBreadcrumbs(sequenceArray, path_size + " " + goal_name);
+    updateBreadcrumbs(sequenceArray, path_size + " " + goal_name, e_size);
 
     // Fade all the segments.
     d3.selectAll("path")
@@ -377,6 +410,9 @@ function createVisualization(json) {
     trail.append("svg:text")
       .attr("id", "endlabel")
       .style("fill", "#000");
+    trail.append("svg:text")
+      .attr("id", "seclabel")
+      .style("fill", "#000");     
       
   }
 
@@ -396,7 +432,7 @@ function breadcrumbPoints(d, i) {
 }
 
   // Update the breadcrumb trail to show the current sequence and percentage.
-  function updateBreadcrumbs(nodeArray, percentageString) {
+  function updateBreadcrumbs(nodeArray, percentageString, secondary_label) {
     // Data join; key function combines name and depth (= position in sequence).
     var trail = d3.select("#trail")
       .selectAll("g")
@@ -436,8 +472,11 @@ function breadcrumbPoints(d, i) {
     // change string to ..end with this sequence tjsp
     //console.log(nodeArray[nodeArray.length-1])
     d3.select("#trail").select("#endlabel")
-      .attr("y", function() {
-        return (nodeArray.length + 0.5) * (b.h + b.s);
+      .attr("y", function(d) {
+        var nal = nodeArray[0]["children"].length;
+        //console.log(nal);
+        //console.log(nodeArray[0]["children"][1]);
+        return (nodeArray.length + 0.3) * (b.h + b.s);
       })
       .attr("x", 10)
       .attr("dy", "0.35em")
@@ -446,6 +485,21 @@ function breadcrumbPoints(d, i) {
       .attr("font-size", bc_font_size)
       .style('fill', base_font_color)
       .text(percentageString);
+
+      d3.select("#trail").select("#seclabel")
+      .attr("y", function(d) {
+        var nal = nodeArray[0]["children"].length;
+        //console.log(nal);
+        //console.log(nodeArray[0]["children"][1]);
+        return (nodeArray.length + 0.9) * (b.h + b.s);
+      })
+      .attr("x", 10)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "start")
+      .attr('font-family', base_font)
+      .attr("font-size", bc_font_size)
+      .style('fill', base_font_color)
+      .text(secondary_label);      
 
     // Make the breadcrumb trail visible, if it's hidden.
     d3.select("#trail")
@@ -543,7 +597,7 @@ function buildHierarchy(parsedData) {
     cats = cats.concat(un_cats)
     var currentNode = root;
 
-    if (parts.length <= 7) {
+    if (parts.length <= sequence_levels) {
       for (var j = 0; j < parts.length; j++) {
         var children = currentNode["children"];
         var nodeName = parts[j];

@@ -8,7 +8,7 @@
     "build:prod": "webpack --config=config/webpack.config.js; cp src/index.json dist/index.json; cp manifest.json dist/manifest.json; cp src/index.css dist/index.css",
     "build:dev": "webpack --config=config/webpack.config.dev.js; cp src/index.json dev/index.json; cp ./manifest.dev.json dev/manifest.json; cp src/index.css dev/index.css",
     "deploy:prod": "npm run build:prod; gsutil cp -a public-read dist/* gs://path_sequence_gen2",
-    "deploy:dev": "npm run build:dev; gsutil cp -a public-read dev/* gs:/path_sequence_gen2/dev"
+    "deploy:dev": "npm run build:dev; gcloud storage cp dev/ gs://path_sequence_gen2/ --recursive"
   },
   "keywords": [],
   "author": "",

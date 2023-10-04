@@ -3,4 +3,5 @@ package-lock.json
 .DS_Store
 dev/*
 npm_git_init.sh
+index.js.LICENSE.txt
 .gitignore
