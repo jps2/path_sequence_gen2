@@ -64,6 +64,7 @@ var bc_font_size, bc_font_color, color_scheme;
 var gds_height, gds_width, rect_base
 var myColor
 var show_legend, hideEndpoint, sequence_levels, sequence_percentage
+var showSecondary
 
 function drawViz(data) {
 
@@ -88,6 +89,8 @@ function drawViz(data) {
   sequence_levels = styleByConfigId.max_steps_shown.value !== undefined ? parseInt(styleByConfigId.max_steps_shown.value) : 7
   sequence_percentage = styleByConfigId.perc_ending.value !== undefined ? styleByConfigId.perc_ending.value : ""
   // setup the number of sequences to be show
+  showSecondary = styleByConfigId.show_secondary.value !== undefined ? styleByConfigId.show_secondary.value : styleByConfigId.show_secondary.defaultValue
+  
 
   // read data
   var parsedData = dataByConfigId.map(function (d) {
@@ -290,7 +293,7 @@ function createVisualization(json) {
     }
 
     var e_size = '';
-    if (Array.isArray(d.data.children)) {
+    if (showSecondary && Array.isArray(d.data.children)) {
       e_size =  percFormat(getEndsize(d.data)/d.value) + " " + sequence_percentage;
     }
 

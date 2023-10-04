@@ -77,7 +77,13 @@
           "label": "Max number of steps shown",
           "type": "TEXTINPUT",
           "defaultValue": "7"
-        } ,
+        },
+        {
+          "id": "show_secondary",
+          "label": "Show % value ending on breadcrumbs",
+          "type": "CHECKBOX",
+          "defaultValue": false
+        },
         {
           "id": "perc_ending",
           "label": "% of paths ending at this step",
